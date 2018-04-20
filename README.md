@@ -1,6 +1,5 @@
 # TRIPDOG
-App to show to like and share dogs around the world .
-
+App to show, like and share dogs around the world .
 
 ## Available Scripts
 

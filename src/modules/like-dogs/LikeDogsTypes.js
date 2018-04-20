@@ -1,0 +1,2 @@
+export const UPDATE_DOGS = 'UPDATE_DOGS'
+export const IS_FETCHING_DOGS = 'IS_FETCHING_DOGS'
