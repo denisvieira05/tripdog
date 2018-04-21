@@ -6,6 +6,7 @@ import LikeDogs from '../like-dogs/LikeDogs';
 import Login from '../login/Login'; 
 import 'antd/dist/antd.css';
 import MainBreadcrumb, { AppRoutes } from './components/MainBreadcrumb'
+import GeneralHeader from './components/GeneralHeader'
 
 const { Header, Content } = Layout;
 
@@ -13,19 +14,7 @@ const AppMain = withRouter((props) => {
 
   return (
     <Layout className="layout" >
-      <Header style={{ display: 'flex'}}>
-        <div className="app-logo" />
-        <Menu
-          theme="dark"
-          mode="horizontal"
-          defaultSelectedKeys={['1']}
-          style={{ lineHeight: '64px', alignSelf: 'flex-end' }}
-        >
-          <Menu.Item key="1">Like Dogs</Menu.Item>
-          <Menu.Item key="2">nav 2</Menu.Item>
-          <Menu.Item key="3">Login</Menu.Item>
-        </Menu>
-      </Header>
+      <GeneralHeader />
       <Content style={{ padding: '50px', backgroundColor: '#F0F2F5' }}>
         <MainBreadcrumb location={ props.location }/>
         <div>
