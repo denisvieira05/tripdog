@@ -1,12 +1,12 @@
 import React, { PureComponent } from 'react';
-import { Col, Row, Spin, Icon } from 'antd';
+import { Col, Row, Spin, Icon, Button } from 'antd';
 import * as LikeDogsActions from './LikeDogsActions'
 import { connect } from 'react-redux'
-
+import { Link } from 'react-router-dom'
 class LikeDogs extends PureComponent {
 
   async componentWillMount() {
-    // this.props.loadDogs()
+    this.props.loadDogs()
   }
 
   render() {
@@ -22,23 +22,24 @@ class LikeDogs extends PureComponent {
           />
         </Row>
       )
-    }
+    } 
 
     return (
       <div >
         <Row type="flex" justify="start" gutter={16}>
-          LIKEDOGS SCREEN
-        </Row>
+          <Link to={'/apps'}>
+            <Button type="primary">GO APPS ROUTES LIST</Button>
+          </Link>
+      </Row>
       </div>
     )
-
   }
 }
 
 
 const mapStateToProps = (state) => ({
   dogs: state.likeDogs.companies,
-  isFetchingCompanies: state.likeDogs.isFetchingDogs
+  isFetchingDogs: state.likeDogs.isFetchingDogs
 })
 
 const mapDispatchToProps = {
