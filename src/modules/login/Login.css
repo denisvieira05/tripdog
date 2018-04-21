@@ -1,0 +1,14 @@
+.login-logo {
+  background-repeat: no-repeat;
+  background-size: cover;
+  height: 64px;
+  width: 64px;
+}
+
+.login-title {
+  color: #860e00;
+}
+
+.card-title {
+  margin: 20px;
+}
