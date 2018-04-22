@@ -1,9 +1,20 @@
 import { API_ENVIROMENTS, BASE_URLS } from './CONSTANTS'
+import * as firebase from "firebase";
 
+var firebaseConfig = {
+  apiKey: "AIzaSyAoPeHWIHg5zamgMUQ4RkzulmI3aEvryB4",
+  authDomain: "tripdog-6c17a.firebaseapp.com",
+  databaseURL: "https://tripdog-6c17a.firebaseio.com",
+  projectId: "tripdog-6c17a",
+  storageBucket: "tripdog-6c17a.appspot.com",
+  messagingSenderId: "237893716018"
+};
 class ApiDataSource {
 
   constructor(apiEnviroment) {
     this.API_ENVIROMENT = apiEnviroment
+    firebase.initializeApp(firebaseConfig)
+    this.firebaseDatabase = firebase.database()
   }
 
   getBaseUrl() {

@@ -20,14 +20,11 @@ export const isFetchingDogs = (isFetching) => ({
 export const loadDogs = () => {
   return async (dispatch) => {
     dispatch(isFetchingDogs(true))
-    // const token = await dbGetToken()
-    const token = '3c4aa43a65a23809cf344260b9ed0dd96bcea318a0c31c6b25d1f49332c73ca7'
 
-    await new DogsService().getDogs(token)
-      .then((response) => {
-        console.log(response)
-        dispatch(updateDogs(response))
-        dispatch(isFetchingDogs(false))
-      })
+    const dogs = await new DogsService().getDogs()
+
+    console.log(dogs)
+    dispatch(updateDogs(dogs))
+    dispatch(isFetchingDogs(false))
   }
 }

@@ -1,0 +1,10 @@
+{
+  "dogs": [
+    {
+      "id": 1,
+      "base64_image": "http://imprensa.norcon.com.br/imprensanorcon/img_noticias/336/apala2.JPG",
+      "name": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur sit amet purus bibendum, vestibulum augue ut, accumsan libero. Nunc vulputate vestibulum mi, vitae mattis ligula. 1",
+      "user_id": "321321"
+    }
+  ]
+}

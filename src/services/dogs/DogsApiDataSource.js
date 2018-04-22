@@ -1,17 +1,16 @@
 import axios from 'axios'
 import ApiDataSource from '../ApiDataSource'
+import DogsConverter from './DogsConverter'
 
 class DogsApiDataSource extends ApiDataSource {
 
   getDogs(accessToken) {
-    return axios({
-      method: 'post',
-      baseURL: this.getBaseUrl(),
-      url: '/dogs',
-      timeout: 3000,
-      data: {
-        Authorization: accessToken,
-      },
+    return new Promise((resolve, reject) => {
+      this.firebaseDatabase.ref('/dogs/').once('value')
+        .then((snapshot) => {
+          const dogs = new DogsConverter().mapperResponsesToEntities(snapshot.val())
+          resolve(dogs)
+        })
     })
   }
 
