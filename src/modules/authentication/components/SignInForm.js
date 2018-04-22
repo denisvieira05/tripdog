@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Form, Icon, Input, Button, Row, Card, Col, Checkbox } from 'antd';
 import { connect } from 'react-redux';
-import './Login.css';
+import { Link } from 'react-router-dom'
 
 const FormItem = Form.Item;
 
@@ -36,7 +36,7 @@ class Login extends Component {
         <Col span={8}>
 
           <Card>
-            <CardTitle />
+            <CardTitle title="SIGN IN"/>
             <Form onSubmit={this.handleSubmit}>
               <FormItem>
                 {
@@ -71,7 +71,7 @@ class Login extends Component {
 
               <FormItem>
                 <Button type="primary" htmlType="submit">Log in</Button>
-                &nbsp;Or <a href="">register now!</a>
+                &nbsp;Or  <Link to="signup">register now!</Link>
               </FormItem>
             </Form>
           </Card>
@@ -82,7 +82,7 @@ class Login extends Component {
 }
 
 const mapStateToProps = (state) => ({
-  teste: state.login.teste,
+  teste: state.authorization.teste,
 })
 
 const LoginForm = Form.create()(Login);

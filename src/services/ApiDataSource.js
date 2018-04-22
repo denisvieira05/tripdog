@@ -13,8 +13,9 @@ class ApiDataSource {
 
   constructor(apiEnviroment) {
     this.API_ENVIROMENT = apiEnviroment
-    firebase.initializeApp(firebaseConfig)
-    this.firebaseDatabase = firebase.database()
+    if (!firebase.apps.length) {
+      firebase.initializeApp(firebaseConfig)
+    }
   }
 
   getBaseUrl() {
