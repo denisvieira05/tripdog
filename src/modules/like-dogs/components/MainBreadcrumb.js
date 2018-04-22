@@ -44,7 +44,7 @@ const MainBreadcrumb = ({ location }) => {
 
   const breadcrumbItems = [(
     <Breadcrumb.Item key="home">
-      <Link to="/">Dashboard</Link>
+      <Link to="/">Like Dogs</Link>
     </Breadcrumb.Item>
   )].concat(extraBreadcrumbItems);
 

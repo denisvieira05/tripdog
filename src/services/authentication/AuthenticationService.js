@@ -12,8 +12,8 @@ class AuthenticationService extends ServiceDataSource {
     return this.datasource().isAuthenticated()
   }
 
-  signIn() {
-    return this.datasource().signIn()
+  signIn(email, password) {
+    return this.datasource().signIn(email, password)
   }
 
   signOut() {

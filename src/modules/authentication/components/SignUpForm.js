@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Form, Icon, Input, Button, Row, Card, Col, Checkbox } from 'antd';
+import { Form, Icon, Input, Button, Row, Card, Col } from 'antd';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom'
 
@@ -84,7 +84,7 @@ class Login extends Component {
 }
 
 const mapStateToProps = (state) => ({
-  teste: state.authorization.teste,
+  teste: state.authentication.teste,
 })
 
 const LoginForm = Form.create()(Login);

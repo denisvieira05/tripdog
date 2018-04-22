@@ -1,4 +1,3 @@
-import axios from 'axios'
 import ApiDataSource from '../ApiDataSource'
 import DogsConverter from './DogsConverter'
 import * as firebase from "firebase";

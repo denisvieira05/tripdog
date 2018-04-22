@@ -5,9 +5,9 @@ import {
   UPDATE_AUTHORIZATION_STATE
 } from './AuthenticationTypes'
 
-export const updateAuthorizationState = (authState) => ({
+export const updateAuthorizationState = (isAuthenticated) => ({
   type: UPDATE_AUTHORIZATION_STATE,
-  payload: authState,
+  payload: isAuthenticated,
 })
 
 export const isAuthenticating = (isAuthenticating) => ({
@@ -16,15 +16,25 @@ export const isAuthenticating = (isAuthenticating) => ({
 })
 
 export const signIn = (email, password) => {
-  return async (dispatch) => {
+  return (dispatch) => {
     dispatch(isAuthenticating(true))
 
-    const credentials = { email, password }
+    new AuthenticationService().signIn(email, password)
+    .then((snapshot) => {
+      console.log('auth success')
+      localStorage.setItem('id_token', 'user.id_token321321321')
+      localStorage.setItem('id_token', 'user.access_token3213213')
 
-    await new AuthenticationService().signIn(credentials)
+      // localStorage.removeItem('id_token')
+      // localStorage.removeItem('access_token')
+      dispatch(isAuthenticating(false))
+      dispatch(updateAuthorizationState(true))
+    })
+    .catch((error) => {
+      dispatch(isAuthenticating(false))
+      console.log('auth error', error)
+    });
 
-    dispatch(isAuthenticating(false))
-    dispatch(updateAuthorizationState(true))
   }
 }
 

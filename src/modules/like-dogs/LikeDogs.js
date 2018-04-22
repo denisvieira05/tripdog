@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react';
-import { Col, Row, Spin, Icon, Button, Layout} from 'antd';
+import { Row, Spin, Icon, Layout} from 'antd';
 import * as LikeDogsActions from './LikeDogsActions'
 import { connect } from 'react-redux'
 import { Link } from 'react-router-dom'
@@ -33,9 +33,14 @@ class LikeDogs extends PureComponent {
         <Content style={{ padding: '50px', backgroundColor: '#F0F2F5' }}>
           <MainBreadcrumb location={this.props.location} />
           <Row type="flex" justify="start" gutter={16}>
-            <Link to={'/apps'}>
-              <Button type="primary">GO APPS ROUTES LIST</Button>
-            </Link>
+            <Link to={'/apps'}>GO APPS ROUTES LIST </Link>
+          </Row>
+          <Row type="flex" justify="start" gutter={16}>
+            {
+              dogs.map((dog, index) => (
+                <span key={index}>{dog.name}</span>
+              ))
+            }
           </Row>
         </Content>
       </Layout>
@@ -45,7 +50,7 @@ class LikeDogs extends PureComponent {
 
 
 const mapStateToProps = (state) => ({
-  dogs: state.likeDogs.companies,
+  dogs: state.likeDogs.dogs,
   isFetchingDogs: state.likeDogs.isFetchingDogs
 })
 

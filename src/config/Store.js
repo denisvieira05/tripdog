@@ -4,7 +4,7 @@ import LikeDogsReducer from '../modules/like-dogs/LikeDogsReducer'
 import AuthenticationReducer from '../modules/authentication/AuthenticationReducer'
 
 const appReducer = combineReducers({
-  authorization: AuthenticationReducer,
+  authentication: AuthenticationReducer,
   likeDogs: LikeDogsReducer,
 })
 

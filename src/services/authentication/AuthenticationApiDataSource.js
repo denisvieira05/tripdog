@@ -9,16 +9,14 @@ class AuthenticationApiDataSource extends ApiDataSource {
     // return this.datasource().isAuthenticated()
   }
 
-  signIn(credentials) {
+  signIn(email, password) {
     return new Promise((resolve, reject) => {
       firebase.auth().signInWithEmailAndPassword(email, password)
         .then((snapshot) => {
-          console.log('auth', snapshot)
+          resolve()
         })
         .catch(function (error) {
-          var errorCode = error.code;
-          var errorMessage = error.message;
-
+          reject(error)
         });
     })
   }
@@ -27,7 +25,7 @@ class AuthenticationApiDataSource extends ApiDataSource {
     // return this.datasource().signOut()
   }
 
-  signUp(credentials) {
+  signUp(name, email, password) {
     return new Promise((resolve, reject) => {
       firebase.auth().createUserWithEmailAndPassword(email, password)
         .then((snapshot) => {

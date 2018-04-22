@@ -4,7 +4,7 @@ import {
 } from './AuthenticationTypes'
 
 export const initial = {
-  isAuthenticated: false,
+  isAuthenticated: localStorage.getItem('id_token') ? true : false,
   isAuthenticating: false
 }
 

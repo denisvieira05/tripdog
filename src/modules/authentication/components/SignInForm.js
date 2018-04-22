@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Form, Icon, Input, Button, Row, Card, Col, Checkbox } from 'antd';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom'
+import * as AuthenticationActions from '../AuthenticationActions'
 
 const FormItem = Form.Item;
 
@@ -23,6 +24,8 @@ class Login extends Component {
 
     this.props.form.validateFields((err, values) => {
       if (!err) {
+        const { email, password } = values
+        this.props.signIn(email, password)
         console.log('Received values of form: ', values);
       }
     });
@@ -40,12 +43,12 @@ class Login extends Component {
             <Form onSubmit={this.handleSubmit}>
               <FormItem>
                 {
-                  getFieldDecorator('userName', {
+                  getFieldDecorator('email', {
                     rules: [{
                       required: true,
-                      message: 'Please input your username!'
+                      message: 'Please input your email!'
                     }],
-                  })(<Input prefix={<Icon type="user" />} placeholder="Username" />)
+                  })(<Input prefix={<Icon type="mail" />} placeholder="Email" />)
                 }
               </FormItem>
 
@@ -70,7 +73,7 @@ class Login extends Component {
               </FormItem>
 
               <FormItem>
-                <Button type="primary" htmlType="submit">Log in</Button>
+                <Button type="primary" htmlType="submit" loading={this.props.isAuthenticating}>Log in</Button>
                 &nbsp;Or  <Link to="signup">register now!</Link>
               </FormItem>
             </Form>
@@ -82,9 +85,13 @@ class Login extends Component {
 }
 
 const mapStateToProps = (state) => ({
-  teste: state.authorization.teste,
+  isAuthenticating: state.authentication.isAuthenticating,
 })
+
+const mapDispatchToProps = {
+  signIn: AuthenticationActions.signIn,
+}
 
 const LoginForm = Form.create()(Login);
 
-export default connect(mapStateToProps, null)(LoginForm);
+export default connect(mapStateToProps, mapDispatchToProps)(LoginForm);

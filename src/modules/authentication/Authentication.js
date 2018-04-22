@@ -8,6 +8,11 @@ import { HashRouter as Router, Route, withRouter, Redirect } from 'react-router-
 class Authentication extends PureComponent {
 
   render() {
+    const { isAuthenticated } = this.props
+
+    if(isAuthenticated) {
+      return <Redirect to="/" />
+    }
 
     return (
       <Row type="flex" justify="space-around" align="middle" size={"small"}>
@@ -29,7 +34,7 @@ class Authentication extends PureComponent {
 }
 
 const mapStateToProps = (state) => ({
-  teste: state.authorization.teste,
+  isAuthenticated: state.authentication.isAuthenticated,
 })
 
 export default withRouter(connect(mapStateToProps, null)(Authentication));
