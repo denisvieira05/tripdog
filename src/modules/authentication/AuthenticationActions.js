@@ -36,7 +36,7 @@ export const signIn = (email, password) => {
     .then((snapshot) => {
       dispatch(isAuthenticating(false))
       dispatch(updateAuthorizationState(true))
-
+      dispatch(updateSignInError(''))
     })
     .catch((error) => {
       dispatch(isAuthenticating(false))
@@ -53,6 +53,7 @@ export const signUp = (username, email, password) => {
     .then(() => {
         dispatch(isAuthenticating(false))
         dispatch(updateAuthorizationState(true))
+        dispatch(updateSignUpError(''))
     })
     .catch((error) => {
       dispatch(isAuthenticating(false))

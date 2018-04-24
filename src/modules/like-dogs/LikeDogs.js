@@ -28,9 +28,9 @@ class LikeDogs extends PureComponent {
     } 
 
     return (
-      <Layout className="layout" >
+      <Layout style={{ background: 'white'}} >
         <GeneralHeader />
-        <Content style={{ padding: '50px', backgroundColor: '#F0F2F5' }}>
+        <Content style={{ padding: '50px' }}>
           <MainBreadcrumb location={this.props.location} />
           <Row type="flex" justify="start" gutter={16}>
             <Link to={'/apps'}>GO APPS ROUTES LIST </Link>

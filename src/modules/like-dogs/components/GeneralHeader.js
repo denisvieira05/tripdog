@@ -1,11 +1,13 @@
 
 import React from 'react';
-import { Layout, Menu } from 'antd';
+import { Layout, Menu, Input } from 'antd'; 
 import { Link } from 'react-router-dom'
 import { connect } from 'react-redux'
 import * as AuthenticationActions from '../../authentication/AuthenticationActions'
+import { tripDogLogo } from '../../../assets/Images'
 
 const { Header } = Layout;
+const Search = Input.Search;
 
 const GeneralHeader = (props) => {
   const { isAuthenticated, signOut } = props
@@ -21,30 +23,37 @@ const GeneralHeader = (props) => {
   }
 
   return (
-    <Header style={{ display: 'flex' }}>
-      <div className="app-logo" />
-      <Menu
-        theme="dark"
-        mode="horizontal"
-        defaultSelectedKeys={['1']}
-        style={{ lineHeight: '64px' }}
-        onClick={({item, key, keyPath}) => onClickMenu(item, key, keyPath)}
-      >
-        <Menu.Item key="1"><Link to="/">Like Dogs</Link></Menu.Item>
-        <Menu.Item key="2"><Link to="/apps">Apps</Link></Menu.Item>
+    <Header style={{ display: 'flex', background: 'white', justifyContent: 'space-around', paddingBottom: '5em', borderBottom: '1px solid #ccc' }}>
+      <div style={{ flex: 0.5 }}> <Link to="/"><img src={tripDogLogo} style={styles.logoMain} /></Link></div>
+
+      <div style={{ flex: 3 }}>
+        <Search
+          placeholder="Search Dogs"
+          onSearch={value => console.log(value)}
+        />
+      </div>
+      <div style={{ display: 'flex', flex: 2, justifyContent: 'space-around'}}>
+        <Link to="/">Explore Dogs</Link>
+        <Link to="/apps">My Wishlist</Link>
         {
           isAuthenticated ? (
-            <Menu.Item key="3" >Logout</Menu.Item>
-          ): (
-            <Menu.Item key="4" > <Link to="/auth">Login</Link></Menu.Item>
-          )
-        }      
-        
-      </Menu>
+            <a onClick={() => signOut()}>Logout</a>
+          ) : (
+              <Link to="/auth">Log In</Link>
+            )
+        }     
+      </div>
     </Header>
   )
 }
 
+const styles = {
+  logoMain: {
+    width: '4.3em',
+    height: '4em',
+    alignSelf: 'center'
+  }
+}
 
 const mapStateToProps = (state) => ({
   isAuthenticated: state.authentication.isAuthenticated,
