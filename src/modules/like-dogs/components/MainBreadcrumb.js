@@ -9,7 +9,9 @@ const breadcrumbNameMap = {
   '/apps/2': 'Application2',
   '/apps/1/detail': 'Detail',
   '/apps/2/detail': 'Detail',
-  '/login': 'Login',
+  '/auth': 'Authentication',
+  '/auth/signup': 'Sign Up',
+  '/auth/remember': 'Remember Password',
 };
 
 export const AppRoutes = () => (
@@ -21,7 +23,7 @@ export const AppRoutes = () => (
       <Link to="/apps/2">Application2</Link>：<Link to="/apps/2/detail">Detail</Link>
     </li>
     <li>
-      <Link to="/login">Login</Link>
+      <Link to="/auth">Login</Link>
     </li>
   </ul>
 );
@@ -42,7 +44,7 @@ const MainBreadcrumb = ({ location }) => {
 
   const breadcrumbItems = [(
     <Breadcrumb.Item key="home">
-      <Link to="/">Dashboard</Link>
+      <Link to="/">Like Dogs</Link>
     </Breadcrumb.Item>
   )].concat(extraBreadcrumbItems);
 

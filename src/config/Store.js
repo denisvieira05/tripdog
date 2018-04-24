@@ -1,10 +1,10 @@
 import { createStore, combineReducers, applyMiddleware } from 'redux'
 import thunk from 'redux-thunk'
 import LikeDogsReducer from '../modules/like-dogs/LikeDogsReducer'
-import LoginReducer from '../modules/login/LoginReducer'
+import AuthenticationReducer from '../modules/authentication/AuthenticationReducer'
 
 const appReducer = combineReducers({
-  login: LoginReducer,
+  authentication: AuthenticationReducer,
   likeDogs: LikeDogsReducer,
 })
 
