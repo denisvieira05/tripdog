@@ -1,0 +1,10 @@
+.auth-container {
+  background-image: url("../../assets/imgs/many-dogs.jpg") !important;
+  background-repeat: no-repeat;
+  background-size: 100%;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+} 
+

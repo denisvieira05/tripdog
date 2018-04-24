@@ -2,8 +2,11 @@
 import AuthenticationService from '../../services/authentication/AuthenticationService'
 import {
   IS_AUTHENTICATING,
-  UPDATE_AUTHORIZATION_STATE
+  UPDATE_AUTHORIZATION_STATE,
+  SIGNIN_ERROR,
+  SIGNUP_ERROR
 } from './AuthenticationTypes'
+import { Redirect } from 'react-router'
 
 export const updateAuthorizationState = (isAuthenticated) => ({
   type: UPDATE_AUTHORIZATION_STATE,
@@ -15,45 +18,56 @@ export const isAuthenticating = (isAuthenticating) => ({
   payload: isAuthenticating,
 })
 
+export const updateSignInError = (authError) => ({
+  type: SIGNIN_ERROR,
+  payload: authError,
+})
+
+export const updateSignUpError = (authError) => ({
+  type: SIGNUP_ERROR,
+  payload: authError,
+})
+
 export const signIn = (email, password) => {
   return (dispatch) => {
     dispatch(isAuthenticating(true))
 
     new AuthenticationService().signIn(email, password)
     .then((snapshot) => {
-      console.log('auth success')
-      localStorage.setItem('id_token', 'user.id_token321321321')
-      localStorage.setItem('id_token', 'user.access_token3213213')
-
-      // localStorage.removeItem('id_token')
-      // localStorage.removeItem('access_token')
       dispatch(isAuthenticating(false))
       dispatch(updateAuthorizationState(true))
+
     })
     .catch((error) => {
       dispatch(isAuthenticating(false))
-      console.log('auth error', error)
+      dispatch(updateSignInError(error.message))
     });
 
   }
 }
 
-export const signUp = (name, email, password) => {
-  return async (dispatch) => {
+export const signUp = (username, email, password) => {
+  return (dispatch) => {
     dispatch(isAuthenticating(true))
-
-    const credentials = { name, email, password }
-
-    await new AuthenticationService().signUp(credentials)
-
-    dispatch(isAuthenticating(true))
-    dispatch(updateAuthorizationState(true))
+    new AuthenticationService().signUp(username, email, password)
+    .then(() => {
+        dispatch(isAuthenticating(false))
+        dispatch(updateAuthorizationState(true))
+    })
+    .catch((error) => {
+      dispatch(isAuthenticating(false))
+      dispatch(updateSignUpError(error.message))
+    });
   }
 }
 
 export const signOut = () => {
-  return async (dispatch) => {
-    await new AuthenticationService().signOut()
-    dispatch(updateAuthorizationState(false))
+  return (dispatch) => {
+    new AuthenticationService().signOut().then((snapshot) => {
+      dispatch(isAuthenticating(false))
+      dispatch(updateAuthorizationState(false))
+    }).catch((error) => {
+      dispatch(isAuthenticating(false))
+    });
   }
 }

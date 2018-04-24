@@ -20,8 +20,8 @@ class AuthenticationService extends ServiceDataSource {
     return this.datasource().signOut()
   }
 
-  signUp() {
-    return this.datasource().createAuthorization()
+  signUp(username, email, password) {
+    return this.datasource().signUp(username, email, password)
   }
 
 }
