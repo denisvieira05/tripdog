@@ -1,10 +1,10 @@
 
 import React from 'react';
-import { Layout, Menu, Input } from 'antd'; 
+import { Layout, Menu, Input, Dropdown, Icon, Avatar } from 'antd'; 
 import { Link } from 'react-router-dom'
 import { connect } from 'react-redux'
-import * as AuthenticationActions from '../../authentication/AuthenticationActions'
-import { tripDogLogo } from '../../../assets/Images'
+import * as AuthenticationActions from '../modules/authentication/AuthenticationActions'
+import { tripDogLogo } from '../assets/Images'
 
 const { Header } = Layout;
 const Search = Input.Search;
@@ -12,15 +12,11 @@ const Search = Input.Search;
 const GeneralHeader = (props) => {
   const { isAuthenticated, signOut } = props
 
-  const onPressMenuItemActions = {
-    "3": () => signOut(),
-  }
-
-  const onClickMenu = (item, key, keyPath) => {
-    if (onPressMenuItemActions[key]){
-      return onPressMenuItemActions[key]()
-    }    
-  }
+  const menu = (
+    <Menu onClick={() => signOut()}>
+      <Menu.Item key="1">Log Out</Menu.Item>
+    </Menu>
+  );
 
   return (
     <Header style={{ display: 'flex', background: 'white', justifyContent: 'space-around', paddingBottom: '5em', borderBottom: '1px solid #ccc' }}>
@@ -34,10 +30,15 @@ const GeneralHeader = (props) => {
       </div>
       <div style={{ display: 'flex', flex: 2, justifyContent: 'space-around'}}>
         <Link to="/">Explore Dogs</Link>
-        <Link to="/apps">My Wishlist</Link>
+        {
+          isAuthenticated ? ( <Link to="/profile">My Wishlist</Link> ) : null }
         {
           isAuthenticated ? (
-            <a onClick={() => signOut()}>Logout</a>
+            <Dropdown overlay={menu} trigger={['click']}>
+              <a className="ant-dropdown-link" href="#">
+                <Avatar icon="user" />  Denis Vieira    <Icon type="down" />
+              </a>
+            </Dropdown>
           ) : (
               <Link to="/auth">Log In</Link>
             )
