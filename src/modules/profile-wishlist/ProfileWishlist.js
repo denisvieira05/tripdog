@@ -38,7 +38,7 @@ class ProfileWishlist extends PureComponent {
           <Row type="flex" justify="center" gutter={16} >
             <Col align="middle">
               <h1 style={{ fontWeight: 'bold' }}>Denis Vieira</h1>
-              <h2>Wishlist : 12 Dog Images</h2>
+              <h2>12 Dog Images</h2>
               <AvatarUpload /> 
             </Col>
           </Row>

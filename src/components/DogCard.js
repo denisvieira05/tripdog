@@ -44,7 +44,7 @@ class DogCard  extends PureComponent {
         { this.renderBlackTransparentContainer() }
         { this.renderLikeContainer() }
           
-        <img style={styles.dogImage} src="https://gw.alipayobjects.com/zos/rmsportal/JiqGstEfoWAOHiTxclqi.png" />
+        <img style={styles.dogImage} src="https://www.healthypawspetinsurance.com/Images/V3/DogAndPuppyInsurance/Dog_CTA_Desktop_HeroImage.jpg" />
       </Col>
     )
   } 
@@ -69,15 +69,15 @@ const styles = {
     color: 'white',
     zIndex: '3',
     right: '15px',
-    bottom: '10px',
+    bottom: '7px',
     fontWeight: 'bold'
   },
   likeContainer: {
     position: 'absolute',
     display: 'flex',
-    alignSelf: 'flex-start',
-    top: '10px',
-    right: '78%',
+    alignSelf: 'flex-end',
+    bottom: '18px',
+    right: '80%',
     zIndex: '3'
   },
   cardImageContainer: {
