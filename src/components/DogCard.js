@@ -85,7 +85,8 @@ const styles = {
     alignItems: 'flex-end',
     justifyContent: 'flex-end',
     borderRadius: '1em',
-    marginRight: '1em',
+    marginRight: '2em',
+    marginBottom: '2em',
     height: '15em',
   },
   blackTransparentContainer: {
