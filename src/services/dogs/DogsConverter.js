@@ -9,20 +9,47 @@ class DogsConverter {
 
   mapperResponseToEntity(response) {
     const {
-      id,
+      user,
       base64_image,
       name,
-      user_id
+      genre
     } = response
 
     const entity = {
-      id,
+      user,
       base64Image: base64_image,
       name,
-      userId: user_id,
+      genre
     }
 
     return entity
+  }
+
+  mapperEntityToRequest(entity, user) {
+    const {
+      base64Image,
+      genre,
+      name  
+    } = entity
+
+    const {
+      email,
+      profile_picture,
+      username
+    } = user
+
+    const request = {
+      user: {
+        email,
+        profile_picture,
+        username
+      },
+      base64_image: base64Image,
+      name,
+      genre,
+    }
+
+    return request
   }
 
 }

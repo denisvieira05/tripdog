@@ -8,8 +8,8 @@ class AuthenticationService extends ServiceDataSource {
     super(FakeAuthenticationApiDataSource, AuthenticationApiDataSource)
   }
 
-  isAuthenticated() {
-    return this.datasource().isAuthenticated()
+  getUser() {
+    return this.datasource().getUser()
   }
 
   signIn(email, password) {

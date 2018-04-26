@@ -1,8 +1,7 @@
 import React, { PureComponent } from 'react';
-// import ImagesPreviewListCard from './ImagesPreviewListCard'
 import { Upload, Icon, Modal, Button, Row, Col, DatePicker, Form, Select, Input } from 'antd';
 import { connect } from 'react-redux'
-// import * as ContractProgressEvaluationDetailActions from '../ContractProgressEvaluationDetailActions'
+import * as ProfileWishlistActions from '../ProfileWishlistActions'
 import moment from 'moment'
 import AvatarUpload from './AvatarUpload'
 
@@ -12,64 +11,9 @@ const Option = Select.Option;
 class AddDogModal extends PureComponent {
   state = { 
     uploading: false, 
-    imageFileList: [],
+    currentImageToSend: '',
     confirmUploaded: false,
     photosDate: moment.utc(new Date()).format("L")
-  }
-
-  _onBeforeUpload(file) {
-    this._convertToBase64(file, (e) => {
-      this._addImage(e.target.result, file)
-    })
-    return false;
-  }
-
-  _onRemoveImage(file) {
-    this.setState(({ imageFileList }) => {
-      const index = imageFileList.indexOf(file);
-      const newFileList = imageFileList.slice();
-      newFileList.splice(index, 1);
-      return {
-        imageFileList: newFileList,
-      };
-    });
-  }
-
-  _onUpdateImage(imageFile) {
-    const indexToUpdate = this._getImageIndexToUpdated(imageFile.id)
-    let newArray = [...this.state.imageFileList];
-    newArray[indexToUpdate] = imageFile;
-    this._updateImageFileList(newArray);
-  }
-
-  // _updateImageFileList(newArray) {
-  //   this.setState({
-  //     imageFileList: newArray
-  //   });
-  // } 
-
-
-  _addImage(base64Url, file) {
-    const defaultInitialDateTime = this._getDateTimeByDateTimeStrings(this.state.photosDate, '10:00')
-
-    // this.setState(({ imageFileList }) => ({
-    //   imageFileList: [...imageFileList, {
-    //     id: this._generateIdForImage(),
-    //     base64Url,
-    //     imageFile: file,
-    //     contractProgressEvaluationId: this.props.contractProgressEvaluationId,
-    //     updatedAt: defaultInitialDateTime
-    //   }],
-    // }));
-  }
-
-  _generateIdForImage() {
-    const { imageFileList } = this.state
-    if(imageFileList) {
-      return imageFileList.length + 1
-    } else {
-      return 0
-    }
   }
 
   _convertToBase64(file, onLoadCallback) {
@@ -81,89 +25,150 @@ class AddDogModal extends PureComponent {
     };
   }
 
-  handleSubmit = (value) => {
-    console.log(value);
-    // const { imageFileList } = this.state;
-    // this.props.sendImages(imageFileList)
+  _onBeforeUpload(file) {
+    this._convertToBase64(file, (e) => {
+      this._updateDogImage(e.target.result, file)
+    })
+    return false;
+  }
+
+  _onRemoveImage() {
+    this.setState({ currentImageToSend: ''});
+  }
+
+  _updateDogImage(base64Image, file) {
+    // console.log(base64Image)
+    this.setState({ currentImageToSend: base64Image });
+  }
+
+  handleSubmit = (e) => {
+    e.preventDefault();
+
+    this.props.form.validateFields( async (err, values) => {
+      if (!err) {
+
+        const { currentImageToSend } = this.state
+        const { name, genre } = values
+        const newDog = {
+          base64Image: currentImageToSend,       
+          genre,
+          name  
+        }
+
+        this.props.sendDog(newDog)
+      }
+    });
+  }
+
+  _handleResetFields = () => {
+    this.props.form.resetFields();
+    this.setState({ currentImageToSend: '' });
   }
 
   render() {
-    const { imageFileList, fileList, photosDate } = this.state;
-    const { isUploadingImages } = this.props
+    const { currentImageToSend } = this.state;
+    const { isSendingDog } = this.props
     const { getFieldDecorator } = this.props.form;
 
+    const uploadButton = (
+      <div >
+        <Icon type={this.state.loading ? 'loading' : 'plus'} />
+        <div className="ant-upload-text">Upload</div>
+      </div>
+    );
+
     return (
-      <Modal
-        title="Add Dog"
-        visible={this.props.visible}
-        onOk={this.handleOk}
-        onCancel={this.props.handleCancel}
-        width={600}
-        maskClosable={false}
-        footer={[
-          <Button key="back" onClick={this.props.handleCancel}>
-            Cancelar
-          </Button>,
-          <Button 
-            key="submit" 
-            type="primary" 
-            loading={isUploadingImages} 
-            onClick={this.handleSubmit} 
-            htmlType="submit"
-          >
-            { isUploadingImages ? 'Enviando' : 'Enviar'}
-          </Button>,
-        ]}
-      >
-          <Row type="flex" justify="start" style={{ marginTop: 5, marginBottom: 20 }}>
-            <Col span={18} >
-              <Form onSubmit={this.handleSubmit} style={{ marginRight: '4em' }}>
-                <FormItem
-                  label="Dog Name"
-                  labelCol={{ span: 6 }}
-                  wrapperCol={{ span: 18 }}
+      <Form onSubmit={this.handleSubmit} style={{ marginRight: '4em' }}>
+        <Modal
+          title="Add Dog"
+          visible={this.props.visible}
+          onOk={this.handleOk}
+          onCancel={this.props.handleCancel}
+          width={600}
+          afterClose={() => this._handleResetFields()}
+          maskClosable={false}
+          footer={[
+            <Button key="back" onClick={this.props.handleCancel}>
+              Cancelar
+            </Button>,
+            <Button 
+              key="submit" 
+              type="primary" 
+              loading={isSendingDog} 
+              onClick={this.handleSubmit} 
+              htmlType="submit"
+              style={{ backgroundColor: '#FFB427', borderColor: '#FFB427' }}
+            >
+              {isSendingDog ? 'Enviando' : 'Enviar'}
+            </Button>,
+          ]}
+        >
+            <Row type="flex" justify="start" style={{ marginTop: 5, marginBottom: 20 }}>
+              <Col span={18} >
+                  <FormItem
+                    label="Dog Name"
+                    labelCol={{ span: 6 }}
+                    wrapperCol={{ span: 15 }}
+                  >
+                    {getFieldDecorator('name', {
+                      rules: [{ required: true, message: 'Please input dog name !' }],
+                    })(
+                      <Input />
+                    )}
+                  </FormItem>
+                  <FormItem
+                    label="Dog Genre"
+                    labelCol={{ span: 6 }}
+                    wrapperCol={{ span: 15 }}
+                  >
+                    {getFieldDecorator('genre', {
+                      rules: [{ required: true, message: 'Please select dog genre!' }],
+                    })(
+                      <Select
+                        placeholder="Select a option and change input text above"
+                        style={{ width: '99%' }}
+                      >
+                        <Option value="male">male</Option>
+                        <Option value="female">female</Option>
+                      </Select>
+                    )}
+                  </FormItem>
+              </Col>
+              <Col span={6} >
+              <FormItem
                 >
-                  {getFieldDecorator('name', {
-                    rules: [{ required: true, message: 'Please input dog name !' }],
+                  {getFieldDecorator('image', {
+                    valuePropName: 'currentImageToSend',
+                    getValueFromEvent: this.normFile,
+                    rules: [{ required: true, message: 'Please select dog photo!' }],
                   })(
-                    <Input />
+                  <Upload
+                    name="avatar"
+                    listType="picture-card"
+                    className="avatar-uploader"
+                    showUploadList={false}
+                    beforeUpload={(file) => this._onBeforeUpload(file)}
+                    onRemove={(file) => this._onRemoveImage(file)}
+                    action="//jsonplaceholder.typicode.com/posts/">
+                      {currentImageToSend ? <img src={currentImageToSend} style={{ width: '10em', height: '10em'}} /> : uploadButton}
+                    </Upload>
                   )}
                 </FormItem>
-                <FormItem
-                  label="Dog Breed"
-                  labelCol={{ span: 6 }}
-                  wrapperCol={{ span: 18 }}
-                >
-                  {getFieldDecorator('breed', {
-                    rules: [{ required: true, message: 'Please select dog breed!' }],
-                  })(
-                    <Select
-                      placeholder="Select a option and change input text above"
-                      onChange={this.handleSelectChange}
-                    >
-                      <Option value="male">male</Option>
-                      <Option value="female">female</Option>
-                    </Select>
-                  )}
-                </FormItem>
-              </Form>
-            </Col>
-            <Col span={5}>
-              <AvatarUpload /> 
-            </Col>
-          </Row>
-      </Modal>
+              </Col>
+            </Row>
+        </Modal>
+      </Form>
     )
   }
 
 }
 
 const mapStateToProps = (state) => ({
-  // isUploadingImages: state.contractProgressEvaluationDetail.isUploadingImages,
+  isSendingDog: state.profileWishlist.isSendingDog,
 })
 
 const mapDispatchToProps = {
-  // sendImages: ContractProgressEvaluationDetailActions.sendImages,
+  sendDog: ProfileWishlistActions.sendDog,
 }
 
 

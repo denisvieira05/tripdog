@@ -1,22 +1,34 @@
 import React, { PureComponent } from 'react';
-import { Row, Spin, Icon, Layout, Card, Avatar} from 'antd';
+import { Row, Spin, Icon, Layout, Modal } from 'antd';
 import * as LikeDogsActions from './LikeDogsActions'
 import { connect } from 'react-redux'
-import { Link } from 'react-router-dom'
 import GeneralHeader from '../../components/GeneralHeader'
-import MainBreadcrumb from '../../components/MainBreadcrumb'
 import DogCard from '../../components/DogCard'
 
 const { Content } = Layout;
-const { Meta } = Card;
 class LikeDogs extends PureComponent {
+
+  state = {
+    previewVisible: false,
+    previewImage: ""
+  };
 
   async componentWillMount() {
     this.props.loadDogs()
   }
 
+  handlePreview = img => {
+    this.setState({
+      previewImage: img,
+      previewVisible: true
+    });
+  };
+
+  handleCancelPreview = () => this.setState({ previewVisible: false });
+
   render() {
     const { dogs, isFetchingDogs } = this.props
+    const { previewVisible, previewImage } = this.state;
     const loadingIcon = <Icon type="loading" style={{ fontSize: 50, color: '#ee3923' }} spin />;
   
     if (isFetchingDogs) {
@@ -37,11 +49,22 @@ class LikeDogs extends PureComponent {
           <Row type="flex" justify="start" gutter={16} style={{ marginTop: '2em' }}>
             {
               dogs.map((dog, index) => (
-                <DogCard dog={dog}/>
+                <DogCard
+                  key={index}
+                  dog={dog}
+                  onClickDogCard={dog => this.handlePreview(dog.base64Image)}
+                />
               ))
             }
           </Row>
         </Content>
+        <Modal
+          visible={previewVisible}
+          footer={null}
+          onCancel={this.handleCancelPreview}
+        >
+          <img alt="example" style={{ width: "100%" }} src={previewImage} />
+        </Modal>
       </Layout>
     )
   }

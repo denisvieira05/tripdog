@@ -1,7 +1,5 @@
 import React, { PureComponent } from 'react';
-import { Row, Spin, Icon, Layout, Card, Avatar, Button, Col } from 'antd';
-
-const { Meta } = Card;
+import { Avatar, Button, Col } from 'antd';
 
 class DogCard  extends PureComponent {
 
@@ -9,44 +7,57 @@ class DogCard  extends PureComponent {
     onCardHover: false,
   }
 
-  renderResponsibleContainer() {
+  renderResponsibleContainer(user) {
     return this.state.onCardHover ? (
       <div style={styles.responsibleContainer}>
-        <Avatar icon="user" /> <span>Denis</span>
+        <Avatar icon="user" /> <span>{ user ? user.username : null}</span>
       </div>
     ) : null
   }
 
   renderBlackTransparentContainer() {
+    const { onClickDogCard, dog } = this.props
     return this.state.onCardHover ? (
-      <div style={styles.blackTransparentContainer} />) : null 
+      <div style={styles.blackTransparentContainer}
+        onClick={() => onClickDogCard(dog)} />) : null 
+  }
+  
+  onClickLike() {
+    alert('like')
   }
 
   renderLikeContainer() {
     return this.state.onCardHover ? (
       <div style={styles.likeContainer}>
-        <Button shape="circle" icon="star" />
+        <Button shape="circle" icon="star" onClick={() => this.onClickLike()}/>
       </div>
     ) : null
   }
 
+  renderDogName(dogName) {
+    return this.state.onCardHover ? <div style={styles.dogNameContainer}>
+        <span>{ dogName }</span>
+      </div> : null;
+  }
+
   render() {
-    const { onCardHover } = this.state
+    const { onClickDogCard, dog } = this.props
 
     return (
-      <Col
-        span={5}
-        style={styles.cardImageContainer}
-        onMouseEnter={() => this.setState({ onCardHover: true })}
-        onMouseLeave={() => this.setState({ onCardHover: false })}
-      >
-        { this.renderResponsibleContainer() }
-        { this.renderBlackTransparentContainer() }
-        { this.renderLikeContainer() }
-          
-        <img style={styles.dogImage} src="https://www.healthypawspetinsurance.com/Images/V3/DogAndPuppyInsurance/Dog_CTA_Desktop_HeroImage.jpg" />
-      </Col>
-    )
+      <Col 
+        span={5} 
+        style={styles.cardImageContainer} 
+        onMouseEnter={() => this.setState({ onCardHover: true })} 
+        onMouseLeave={() => this.setState({ onCardHover: false })} 
+        >
+
+        {this.renderResponsibleContainer(dog.user)}
+        {this.renderBlackTransparentContainer()}
+        {this.renderLikeContainer()}
+        {this.renderDogName(dog.name)}
+
+        <img style={styles.dogImage} src={dog.base64Image} />
+      </Col>)
   } 
 
 
@@ -59,6 +70,16 @@ const styles = {
     height: '100%',
     zIndex: 0,
     borderRadius: '1em',
+  },
+  dogNameContainer: {
+    position: 'absolute',
+    display: 'flex',
+    alignSelf: 'flex-start',
+    bottom: '18px',
+    right: '80%',
+    color: 'white',
+    zIndex: '3',
+    fontWeight: 'bold'
   },
   responsibleContainer: {
     position: 'absolute',
@@ -75,9 +96,8 @@ const styles = {
   likeContainer: {
     position: 'absolute',
     display: 'flex',
-    alignSelf: 'flex-end',
-    bottom: '18px',
-    right: '80%',
+    bottom: '80%',
+    right: '85%',
     zIndex: '3'
   },
   cardImageContainer: {
@@ -88,6 +108,7 @@ const styles = {
     marginRight: '2em',
     marginBottom: '2em',
     height: '15em',
+    cursor: 'pointer'
   },
   blackTransparentContainer: {
     position: 'absolute',

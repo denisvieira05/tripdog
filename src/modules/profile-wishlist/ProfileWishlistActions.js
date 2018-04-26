@@ -1,30 +1,51 @@
 
 import DogsService from '../../services/dogs/DogsService'
 import {
-  UPDATE_DOGS,
-  IS_FETCHING_DOGS
+  UPDATE_MY_DOGS_WISHLIST,
+  IS_FETCHING_MY_DOGS_WISHLIST,
+  IS_SENDING_DOG
 } from './ProfileWishlistTypes'
 
-export const updateDogs = (dogs) => {
+export const updateMyDogsWishlist = (myDogsWishlist) => {
   return {
-    type: UPDATE_DOGS,
-    payload: dogs,
+    type: UPDATE_MY_DOGS_WISHLIST,
+    payload: myDogsWishlist,
   }
 }
 
-export const isFetchingDogs = (isFetching) => ({
-  type: IS_FETCHING_DOGS,
+export const isFetchingMyDogsWishlist = (isFetching) => ({
+  type: IS_FETCHING_MY_DOGS_WISHLIST,
   payload: isFetching,
 })
 
-export const loadDogs = () => {
+export const isSendingDog = (isSendingDog) => ({
+  type: IS_SENDING_DOG,
+  payload: isSendingDog,
+})
+
+export const loadMyDogsWishlist = () => {
   return async (dispatch) => {
-    dispatch(isFetchingDogs(true))
+    dispatch(isFetchingMyDogsWishlist(true))
 
-    const dogs = await new DogsService().getDogs()
+    const dogs = await new DogsService().getMyDogsWishlist()
 
-    console.log(dogs)
-    dispatch(updateDogs(dogs))
-    dispatch(isFetchingDogs(false))
+    dispatch(updateMyDogsWishlist(dogs))
+    dispatch(isFetchingMyDogsWishlist(false))
+  }
+}
+
+export const sendDog = (newDog) => {
+  return (dispatch) => {
+
+    dispatch(isSendingDog(true))
+
+    new DogsService().sendDog(newDog).then(() => {
+      dispatch(loadMyDogsWishlist())
+      dispatch(isSendingDog(false))
+    })
+    .catch((error) => {
+      dispatch(isSendingDog(false))
+    });
+
   }
 }

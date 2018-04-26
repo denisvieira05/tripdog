@@ -23,7 +23,6 @@ export const loadDogs = () => {
 
     const dogs = await new DogsService().getDogs()
 
-    console.log(dogs)
     dispatch(updateDogs(dogs))
     dispatch(isFetchingDogs(false))
   }

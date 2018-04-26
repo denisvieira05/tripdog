@@ -10,7 +10,11 @@ const { Header } = Layout;
 const Search = Input.Search;
 
 const GeneralHeader = (props) => {
-  const { isAuthenticated, signOut } = props
+  const { isAuthenticated, signOut, loggedUser, getLoggedUser, onSearchChanged} = props
+
+  if(!loggedUser){
+    getLoggedUser()
+  }
 
   const menu = (
     <Menu onClick={() => signOut()}>
@@ -25,22 +29,22 @@ const GeneralHeader = (props) => {
       <div style={{ flex: 3 }}>
         <Search
           placeholder="Search Dogs"
-          onSearch={value => console.log(value)}
+          onSearch={value => onSearchChanged(value)}
         />
       </div>
       <div style={{ display: 'flex', flex: 2, justifyContent: 'space-around'}}>
-        <Link to="/">Explore Dogs</Link>
+        <Link to="/" style={styles.linkStyle}>Explore Dogs</Link>
         {
-          isAuthenticated ? ( <Link to="/profile">My Wishlist</Link> ) : null }
+          isAuthenticated ? (<Link to="/profile" style={styles.linkStyle}>My Wishlist</Link> ) : null }
         {
           isAuthenticated ? (
-            <Dropdown overlay={menu} trigger={['click']}>
-              <a className="ant-dropdown-link" href="#">
-                <Avatar icon="user" />  Denis Vieira    <Icon type="down" />
+            <Dropdown overlay={menu} trigger={['click']} >
+              <a className="ant-dropdown-link" href="#" style={styles.linkStyle}>
+                <Avatar icon="user" />  { loggedUser ? loggedUser.username : null}   <Icon type="down" />
               </a>
             </Dropdown>
           ) : (
-              <Link to="/auth">Log In</Link>
+              <Link to="/auth" style={styles.linkStyle}>Log In</Link>
             )
         }     
       </div>
@@ -53,15 +57,20 @@ const styles = {
     width: '4.3em',
     height: '4em',
     alignSelf: 'center'
+  },
+  linkStyle: {
+    color: '#FFB427',
   }
 }
 
 const mapStateToProps = (state) => ({
   isAuthenticated: state.authentication.isAuthenticated,
+  loggedUser: state.authentication.loggedUser,
 })
 
 const mapDispatchToProps = {
   signOut: AuthenticationActions.signOut,
+  getLoggedUser: AuthenticationActions.getLoggedUser,
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(GeneralHeader)

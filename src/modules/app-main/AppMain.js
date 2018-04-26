@@ -7,8 +7,6 @@ import ProfileWishlist from '../profile-wishlist/ProfileWishlist';
 import Authentication from '../authentication/Authentication'; 
 import PrivateRoute from '../../components/PrivateRoute'
 
-const Profile = () => ( <h1>PROFILE </h1>)
-
 const AppMain = ({ isAuthenticated }) => {
   return (
     <div>
