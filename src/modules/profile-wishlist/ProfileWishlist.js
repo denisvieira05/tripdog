@@ -12,7 +12,8 @@ class ProfileWishlist extends PureComponent {
   state = {
     showAddPhotoModalState: false,
     previewVisible: false,
-    previewImage: ""
+    previewImage: "",
+    dogsList: this.props.dogs || []
   };
 
   async componentWillMount() {
@@ -25,21 +26,40 @@ class ProfileWishlist extends PureComponent {
         showAddPhotoModalState: false
       })
     }
+    if (nextProps.myDogsWishlist != this.state.dogsList) {
+      this.setState({
+        dogsList: nextProps.myDogsWishlist
+      })
+    }
   }
 
-
-  handlePreview = img => {
+  _handlePreview = img => {
     this.setState({
       previewImage: img,
       previewVisible: true
     });
   };
 
-  handleCancelPreview = () => this.setState({ previewVisible: false });
+  _handleCancelPreview = () => this.setState({ previewVisible: false });
+
+  _textIsPresentOnUsername(textSearched, dogName) {
+    if (textSearched === '')
+      return true
+
+    return dogName.includes(textSearched)
+  }
+
+  _filterDogsList = textSearched => {
+    const { myDogsWishlist } = this.props
+    const dogsFiltered = myDogsWishlist.filter(dog => this._textIsPresentOnUsername(textSearched.toLowerCase(), dog.name.toLowerCase()))
+    this.setState({
+      dogsList: dogsFiltered
+    })
+  }
 
   render() {
-    const { myDogsWishlist, isFetchingDogs, loggedUser } = this.props;
-    const { previewVisible, previewImage } = this.state;
+    const { isFetchingDogs, loggedUser, myDogsWishlist } = this.props;
+    const { previewVisible, previewImage, dogsList } = this.state;
     const loadingIcon = (
       <Icon type="loading" style={{ fontSize: 50, color: "#ee3923" }} spin />
     );
@@ -60,7 +80,7 @@ class ProfileWishlist extends PureComponent {
 
     return (
       <Layout style={{ background: "white" }}>
-        <GeneralHeader />
+        <GeneralHeader onSearchChanged={(text) => this._filterDogsList(text)}/>
         <Content style={{ padding: "50px" }}>
           <AddDogModal
             visible={this.state.showAddPhotoModalState}
@@ -73,7 +93,7 @@ class ProfileWishlist extends PureComponent {
           <Row type="flex" justify="center">
             <Col align="middle">
               <h1 style={{ fontWeight: "bold" }}> { loggedUser ? loggedUser.username : null }</h1>
-              <h2>{myDogsWishlist.length} Dog Images</h2>
+              <h2>{myDogsWishlist.length} Total Dog Images</h2>
               <Button
                 type="primary"
                 style={{ backgroundColor: '#FFB427', borderColor: '#FFB427'}}
@@ -92,12 +112,12 @@ class ProfileWishlist extends PureComponent {
             gutter={16}
             style={{ marginTop: "3em" }}
           >
-            {myDogsWishlist.map((dog, index) => (
+            {dogsList.map((dog, index) => (
               <DogCard
                 key={index}
                 dog={dog}
                 style={{ marginBottom: "2em" }}
-                onClickDogCard={dog => this.handlePreview(dog.base64Image)}
+                onClickDogCard={dog => this._handlePreview(dog.base64Image)}
               />
             ))}
           </Row>
@@ -105,7 +125,7 @@ class ProfileWishlist extends PureComponent {
         <Modal
           visible={previewVisible}
           footer={null}
-          onCancel={this.handleCancelPreview}
+          onCancel={this._handleCancelPreview}
         >
           <img alt="example" style={{ width: "100%" }} src={previewImage} />
         </Modal>
