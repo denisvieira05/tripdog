@@ -93,7 +93,7 @@ class ProfileWishlist extends PureComponent {
           <Row type="flex" justify="center">
             <Col align="middle">
               <h1 style={{ fontWeight: "bold" }}> { loggedUser ? loggedUser.username : null }</h1>
-              <h2>{myDogsWishlist.length} Total Dog Images</h2>
+              <h2 style={styles.subTitleStyle}>{myDogsWishlist.length} Images on Your Dog Wishlist</h2>
               <Button
                 type="primary"
                 style={{ backgroundColor: '#FFB427', borderColor: '#FFB427'}}
@@ -134,6 +134,12 @@ class ProfileWishlist extends PureComponent {
   }
 }
 
+const styles = {
+  subTitleStyle: {
+    color: '#CCC',
+    marginBottom: '1em'
+  },
+}
 
 const mapStateToProps = (state) => ({
   myDogsWishlist: state.profileWishlist.myDogsWishlist,
