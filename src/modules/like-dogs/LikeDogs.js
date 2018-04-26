@@ -10,11 +10,20 @@ class LikeDogs extends PureComponent {
 
   state = {
     previewVisible: false,
-    previewImage: ""
+    previewImage: "",
+    dogsList: this.props.dogs || []
   };
 
   async componentWillMount() {
     this.props.loadDogs()
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.dogs != this.state.dogsList) {
+      this.setState({
+        dogsList: nextProps.dogs
+      })
+    }
   }
 
   handlePreview = img => {
@@ -24,39 +33,53 @@ class LikeDogs extends PureComponent {
     });
   };
 
+  textIsPresentOnUsername(textSearched, dogName) {
+    if(textSearched === '')
+      return true
+
+    return dogName.includes(textSearched)
+  }
+
+  filterDogsList = textSearched => {
+    const dogsFiltered = this.props.dogs.filter((dog) => this.textIsPresentOnUsername(textSearched,dog.name))
+    this.setState({
+      dogsList: dogsFiltered
+    })
+  }
+
   handleCancelPreview = () => this.setState({ previewVisible: false });
 
   render() {
-    const { dogs, isFetchingDogs } = this.props
-    const { previewVisible, previewImage } = this.state;
+    const { isFetchingDogs } = this.props
+    const { previewVisible, previewImage, dogsList } = this.state;
     const loadingIcon = <Icon type="loading" style={{ fontSize: 50, color: '#ee3923' }} spin />;
-  
-    if (isFetchingDogs) {
-      return (
-        <Row type="flex" justify="center" align="middle" gutter={16} style={{ marginTop: '15em' }}>
-          <Spin
-            size="large"
-            indicator={loadingIcon}
-          />
-        </Row>
-      )
-    } 
 
     return (
       <Layout style={{ background: 'white'}} >
-        <GeneralHeader />
+        <GeneralHeader onSearchChanged={(text) => this.filterDogsList(text)}/>
         <Content style={{ padding: '50px' }}>
-          <Row type="flex" justify="start" gutter={16} style={{ marginTop: '2em' }}>
             {
-              dogs.map((dog, index) => (
-                <DogCard
-                  key={index}
-                  dog={dog}
-                  onClickDogCard={dog => this.handlePreview(dog.base64Image)}
-                />
-              ))
+              isFetchingDogs ? (
+                <Row type="flex" justify="center" align="middle" gutter={16} style={{ marginTop: '15em' }}>
+                  <Spin
+                    size="large"
+                    indicator={loadingIcon}
+                  />
+                </Row>
+              ) : (
+                  <Row type="flex" justify="start" gutter={16} style={{ marginTop: '2em' }}>
+                    { 
+                      dogsList.map((dog, index) => (
+                        <DogCard
+                          key={index}
+                          dog={dog}
+                          onClickDogCard={dog => this.handlePreview(dog.base64Image)}
+                        /> 
+                      ))
+                    }
+                  </Row>
+                )
             }
-          </Row>
         </Content>
         <Modal
           visible={previewVisible}

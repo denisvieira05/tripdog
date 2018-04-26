@@ -10,6 +10,7 @@ const { Header } = Layout;
 const Search = Input.Search;
 
 const GeneralHeader = (props) => {
+
   const { isAuthenticated, signOut, loggedUser, getLoggedUser, onSearchChanged} = props
 
   if(!loggedUser){
