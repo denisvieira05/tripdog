@@ -27,3 +27,14 @@ export const loadDogs = () => {
     dispatch(isFetchingDogs(false))
   }
 }
+
+export const handleDogToWishList = (dogLiked) => {
+  return async (dispatch) => {
+    dispatch(isFetchingDogs(true))
+
+    new DogsService().handleDogToUserOnWishlist(dogLiked).then(() => {
+      dispatch(loadDogs())
+    })
+
+  }
+}

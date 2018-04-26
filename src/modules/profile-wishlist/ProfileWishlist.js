@@ -118,6 +118,7 @@ class ProfileWishlist extends PureComponent {
                 dog={dog}
                 style={{ marginBottom: "2em" }}
                 onClickDogCard={dog => this._handlePreview(dog.base64Image)}
+                isLikedByUser={true}
               />
             ))}
           </Row>

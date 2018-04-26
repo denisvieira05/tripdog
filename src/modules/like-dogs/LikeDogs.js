@@ -26,28 +26,33 @@ class LikeDogs extends PureComponent {
     }
   }
 
-  handlePreview = img => {
+  _handlePreview = img => {
     this.setState({
       previewImage: img,
       previewVisible: true
     });
   };
 
-  textIsPresentOnUsername(textSearched, dogName) {
+  _textIsPresentOnUsername(textSearched, dogName) {
     if(textSearched === '')
       return true
 
     return dogName.includes(textSearched)
   }
 
-  filterDogsList = textSearched => {
-    const dogsFiltered = this.props.dogs.filter((dog) => this.textIsPresentOnUsername(textSearched,dog.name))
+  _filterDogsList = textSearched => {
+    const dogsFiltered = this.props.dogs.filter((dog) => this._textIsPresentOnUsername(textSearched,dog.name))
     this.setState({
       dogsList: dogsFiltered
     })
   }
 
-  handleCancelPreview = () => this.setState({ previewVisible: false });
+  _handleCancelPreview = () => this.setState({ previewVisible: false });
+
+  _handleDogOnWishlist (dogLiked) {
+    console.log('dogLiked',dogLiked)
+    this.props.handleDogToWishList(dogLiked)
+  }
 
   render() {
     const { isFetchingDogs } = this.props
@@ -56,7 +61,7 @@ class LikeDogs extends PureComponent {
 
     return (
       <Layout style={{ background: 'white'}} >
-        <GeneralHeader onSearchChanged={(text) => this.filterDogsList(text)}/>
+        <GeneralHeader onSearchChanged={(text) => this._filterDogsList(text)}/>
         <Content style={{ padding: '50px' }}>
             {
               isFetchingDogs ? (
@@ -73,7 +78,8 @@ class LikeDogs extends PureComponent {
                         <DogCard
                           key={index}
                           dog={dog}
-                          onClickDogCard={dog => this.handlePreview(dog.base64Image)}
+                          onClickDogCard={dog => this._handlePreview(dog.base64Image)}
+                          onClickLikeButton={dog => this._handleDogOnWishlist(dog)}
                         /> 
                       ))
                     }
@@ -84,7 +90,7 @@ class LikeDogs extends PureComponent {
         <Modal
           visible={previewVisible}
           footer={null}
-          onCancel={this.handleCancelPreview}
+          onCancel={this._handleCancelPreview}
         >
           <img alt="example" style={{ width: "100%" }} src={previewImage} />
         </Modal>
@@ -101,6 +107,7 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = {
   loadDogs: LikeDogsActions.loadDogs,
+  handleDogToWishList: LikeDogsActions.handleDogToWishList,
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(LikeDogs)

@@ -35,7 +35,7 @@ class DogsApiDataSource extends ApiDataSource {
 
   async sendDog(dog) {
     const loggedUser = await new AuthenticationService().getUser()
-    const newDog = new DogsConverter().mapperEntityToRequest(dog, loggedUser)
+    const newDog = new DogsConverter().mapperEntityToRequest(dog, loggedUser, this.USER_ID)
     return new Promise((resolve, reject) => {
       firebase.database().ref('dogs/').push().set(newDog).then(() => {
         this.addDogToUserWishlist(newDog).then(() => resolve()).catch((error) => reject(error))
@@ -45,7 +45,7 @@ class DogsApiDataSource extends ApiDataSource {
     })
   }
 
-  addDogToUserWishlist(newDog) {
+  handleDogToUserOnWishlist(newDog) {
     return new Promise((resolve, reject) => {
       firebase.database().ref('users/' + this.USER_ID + '/wishlist').push().set(newDog).then(() => {
         resolve()
