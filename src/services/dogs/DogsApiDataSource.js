@@ -35,10 +35,17 @@ class DogsApiDataSource extends ApiDataSource {
 
   async sendDog(dog) {
     const loggedUser = await new AuthenticationService().getUser()
-    const newDog = new DogsConverter().mapperEntityToRequest(dog, loggedUser, this.USER_ID)
+    var newPostKey = await firebase.database().ref().child('dogs').push().key;
+    var updates = {};
+
+    const newDog = new DogsConverter().mapperEntityToRequest(dog, loggedUser, this.USER_ID, newPostKey)
+
+    updates['/dogs/' + newPostKey] = newDog;
+    updates['users/' + this.USER_ID + '/wishlist/' + newPostKey] = newDog;
+
     return new Promise((resolve, reject) => {
-      firebase.database().ref('dogs/').push().set(newDog).then(() => {
-        this.addDogToUserWishlist(newDog).then(() => resolve()).catch((error) => reject(error))
+      firebase.database().ref().update(updates).then(() => {
+        resolve()
       }).catch((error) => {
         reject(error)
       })
@@ -47,6 +54,27 @@ class DogsApiDataSource extends ApiDataSource {
 
   handleDogToUserOnWishlist(newDog) {
     return new Promise((resolve, reject) => {
+      let hasDogOnWishlist = false 
+      const {dogKey} = newDog
+
+      firebase.database().ref('users/' + this.USER_ID).child('wishlist').orderByChild('dog_key').equalTo(dogKey).once("value", function (snapshot) {
+        console.log(snapshot.val());
+        snapshot.forEach(function (data) {
+          console.log('datakey',data.key);
+          console.log('data',data)
+        });
+      });
+
+      // firebase.database().ref('dogs/').push().set(newDog).then(() => {
+      //   this._addDogToUserWishlist(newDog).then(() => resolve()).catch((error) => reject(error))
+      // }).catch((error) => {
+      //   reject(error)
+      // })
+    })
+  }
+
+  _addDogToUserWishlist(newDog) {
+    return new Promise((resolve, reject) => {
       firebase.database().ref('users/' + this.USER_ID + '/wishlist').push().set(newDog).then(() => {
         resolve()
       }).catch((error) => {
@@ -54,6 +82,8 @@ class DogsApiDataSource extends ApiDataSource {
       })
     })
   }
+
+  _removeDogFromUserWishlist(dog) {}
 
 }
 

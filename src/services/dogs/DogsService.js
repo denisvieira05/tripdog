@@ -21,7 +21,7 @@ class DogsService extends ServiceDataSource {
   }
 
   handleDogToUserOnWishlist(dog) {
-    return this.datasource().addDogToUserWishlist(dog)
+    return this.datasource().handleDogToUserOnWishlist(dog)
   }
 
 }
