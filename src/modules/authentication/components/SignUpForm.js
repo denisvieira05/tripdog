@@ -6,19 +6,6 @@ import * as AuthenticationActions from '../AuthenticationActions'
 import { tripDogLogo } from '../../../assets/Images'
 
 const FormItem = Form.Item;
-
-const CardTitle = ({ title }) => (
-  <Row type="flex" justify="space-around" align="middle" className="card-title">
-    <Col
-      span={12}
-      justify="center"
-      align="middle"
-      className="dasdkosad dkasodk ">
-      <h1 className="login-title">{title}</h1>
-    </Col>
-  </Row>
-)
-
 class SignUpForm extends Component {
   handleSubmit = (e) => {
     e.preventDefault();

@@ -1,15 +1,16 @@
-import axios from 'axios'
-import ApiDataSource from '../ApiDataSource'
-import AuthenticationConverter from './AuthenticationConverter'
+import ApiDataSource, { UID_LOCALSTORAGE_KEY, REFRESH_TOKEN_LOCALSTORAGE_KEY }  from '../ApiDataSource'
 import * as firebase from "firebase";
 
-export const UID_LOCALSTORAGE_KEY = 'uid'
-export const REFRESH_TOKEN_LOCALSTORAGE_KEY = 'refresh_token'
-
 class AuthenticationApiDataSource extends ApiDataSource {
-  
-  isAuthenticated() {
-    // return this.datasource().isAuthenticated()
+
+  getUser() {
+    return new Promise((resolve, reject) => {
+      firebase.database().ref('users/' + this.USER_ID).once('value')
+        .then((snapshot) => {
+          const user = snapshot.val()
+          resolve(user)
+        })
+    })
   }
 
   saveNewUserData(userId, name, email, profileImageUrl) {

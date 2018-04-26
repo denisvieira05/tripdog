@@ -4,9 +4,9 @@ import {
   IS_AUTHENTICATING,
   UPDATE_AUTHORIZATION_STATE,
   SIGNIN_ERROR,
-  SIGNUP_ERROR
+  SIGNUP_ERROR,
+  UPDATE_LOGGED_USER
 } from './AuthenticationTypes'
-import { Redirect } from 'react-router'
 
 export const updateAuthorizationState = (isAuthenticated) => ({
   type: UPDATE_AUTHORIZATION_STATE,
@@ -28,6 +28,11 @@ export const updateSignUpError = (authError) => ({
   payload: authError,
 })
 
+export const updateLoggedUser = (loggerUser) => ({
+  type: UPDATE_LOGGED_USER,
+  payload: loggerUser,
+})
+
 export const signIn = (email, password) => {
   return (dispatch) => {
     dispatch(isAuthenticating(true))
@@ -37,6 +42,8 @@ export const signIn = (email, password) => {
       dispatch(isAuthenticating(false))
       dispatch(updateAuthorizationState(true))
       dispatch(updateSignInError(''))
+      console.log(' deve chamar getLoggedUser')
+      getLoggedUser()
     })
     .catch((error) => {
       dispatch(isAuthenticating(false))
@@ -67,8 +74,16 @@ export const signOut = () => {
     new AuthenticationService().signOut().then((snapshot) => {
       dispatch(isAuthenticating(false))
       dispatch(updateAuthorizationState(false))
+      dispatch(updateLoggedUser(null))
     }).catch((error) => {
       dispatch(isAuthenticating(false))
     });
+  }
+}
+
+export const getLoggedUser = () => {
+  return async (dispatch) => {
+    const loggedUser = await new AuthenticationService().getUser()
+    dispatch(updateLoggedUser(loggedUser))
   }
 }

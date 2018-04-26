@@ -7,18 +7,6 @@ import { tripDogLogo } from '../../../assets/Images'
 
 const FormItem = Form.Item;
 
-const CardTitle = ({ title }) => (
-  <Row type="flex" justify="space-around" align="middle" className="card-title">
-    <Col
-      span={12}
-      justify="center"
-      align="middle"
-      className="dasdkosad dkasodk ">
-      <h1 className="login-title">{title}</h1>
-    </Col>
-  </Row>
-)
-
 class SignInForm extends Component {
   handleSubmit = (e) => {
     e.preventDefault();
@@ -42,7 +30,7 @@ class SignInForm extends Component {
 
           <Card style={{ borderRadius: 10}}>
             <div style={styles.titleContainer}>
-              <img style={styles.logoStyle} src={tripDogLogo} />
+              <img alt="Trip Dog" style={styles.logoStyle} src={tripDogLogo} />
               <h2 style={styles.titleStyle}>Welcome to TripDog</h2>
               <h3 style={styles.subTitleStyle}>Search, like and share dogs around the world .</h3>
               <h2>Log In</h2>

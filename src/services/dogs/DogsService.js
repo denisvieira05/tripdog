@@ -8,8 +8,20 @@ class DogsService extends ServiceDataSource {
     super(FakeDogsApiDataSource, DogsApiDataSource)
   }
 
-  getDogs(accessToken) {
-    return this.datasource().getDogs(accessToken)
+  getDogs() {
+    return this.datasource().getDogs()
+  }
+
+  getMyDogsWishlist() {
+    return this.datasource().getMyDogsWishlist()
+  }
+
+  sendDog(dog) {
+    return this.datasource().sendDog(dog)
+  }
+
+  addDogToUserWishlist(dog) {
+    return this.datasource().addDogToUserWishlist(dog)
   }
 
 }
