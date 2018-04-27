@@ -20,8 +20,8 @@ class DogsService extends ServiceDataSource {
     return this.datasource().sendDog(dog)
   }
 
-  addDogToUserWishlist(dog) {
-    return this.datasource().addDogToUserWishlist(dog)
+  handleDogToUserOnWishlist(dog) {
+    return this.datasource().handleDogToUserOnWishlist(dog)
   }
 
 }

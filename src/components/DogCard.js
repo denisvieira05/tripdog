@@ -7,7 +7,7 @@ class DogCard  extends PureComponent {
     onCardHover: false,
   }
 
-  renderResponsibleContainer(user) {
+  _renderResponsibleContainer(user) {
     return this.state.onCardHover ? (
       <div style={styles.responsibleContainer}>
         <Avatar icon="user" /> <span>{ user ? user.username : null}</span>
@@ -15,26 +15,29 @@ class DogCard  extends PureComponent {
     ) : null
   }
 
-  renderBlackTransparentContainer() {
+  _renderBlackTransparentContainer() {
     const { onClickDogCard, dog } = this.props
     return this.state.onCardHover ? (
       <div style={styles.blackTransparentContainer}
         onClick={() => onClickDogCard(dog)} />) : null 
   }
-  
-  onClickLike() {
-    alert('like')
-  }
 
-  renderLikeContainer() {
+  _renderLikeContainer() {
+    const { isLikedByUser, onClickLikeButton, dog } = this.props
+
     return this.state.onCardHover ? (
       <div style={styles.likeContainer}>
-        <Button shape="circle" icon="star" onClick={() => this.onClickLike()}/>
+        <Button 
+          shape="circle" 
+          icon="star"
+          type={isLikedByUser ? 'primary' : 'default'}
+          onClick={() => onClickLikeButton(dog)}
+        />
       </div>
     ) : null
   }
 
-  renderDogName(dogName) {
+  _renderDogName(dogName) {
     return this.state.onCardHover ? <div style={styles.dogNameContainer}>
         <span>{ dogName }</span>
       </div> : null;
@@ -51,10 +54,10 @@ class DogCard  extends PureComponent {
         onMouseLeave={() => this.setState({ onCardHover: false })} 
         >
 
-        {this.renderResponsibleContainer(dog.user)}
-        {this.renderBlackTransparentContainer()}
-        {this.renderLikeContainer()}
-        {this.renderDogName(dog.name)}
+        {this._renderResponsibleContainer(dog.user)}
+        {this._renderBlackTransparentContainer()}
+        {this._renderLikeContainer()}
+        {this._renderDogName(dog.name)}
 
         <img style={styles.dogImage} src={dog.base64Image} />
       </Col>)

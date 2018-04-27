@@ -1,9 +1,8 @@
 import React, { PureComponent } from 'react';
-import { Upload, Icon, Modal, Button, Row, Col, DatePicker, Form, Select, Input } from 'antd';
+import { Upload, Icon, Modal, Button, Row, Col, Form, Select, Input } from 'antd';
 import { connect } from 'react-redux'
 import * as ProfileWishlistActions from '../ProfileWishlistActions'
 import moment from 'moment'
-import AvatarUpload from './AvatarUpload'
 
 const FormItem = Form.Item;
 const Option = Select.Option;

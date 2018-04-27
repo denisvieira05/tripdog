@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react';
-import { Row, Spin, Icon, Layout,  Col, Button, Modal} from 'antd';
+import { Row, Spin, Icon, Layout,  Col, Button, Modal, message} from 'antd';
 import * as ProfileWishlistActions from './ProfileWishlistActions'
 import { connect } from 'react-redux'
 import GeneralHeader from '../../components/GeneralHeader'
@@ -16,7 +16,7 @@ class ProfileWishlist extends PureComponent {
     dogsList: this.props.dogs || []
   };
 
-  async componentWillMount() {
+  componentWillMount() {
     this.props.loadMyDogsWishlist();
   }
 
@@ -26,10 +26,14 @@ class ProfileWishlist extends PureComponent {
         showAddPhotoModalState: false
       })
     }
-    if (nextProps.myDogsWishlist != this.state.dogsList) {
+    if (nextProps.myDogsWishlist !== this.state.dogsList) {
       this.setState({
         dogsList: nextProps.myDogsWishlist
       })
+    }
+
+    if (nextProps.actionMessage !== null && nextProps.actionMessage !== this.props.actionMessage){
+      this._showMessageAfterAction(nextProps.actionMessage)
     }
   }
 
@@ -55,6 +59,25 @@ class ProfileWishlist extends PureComponent {
     this.setState({
       dogsList: dogsFiltered
     })
+  }
+
+  _handleDogOnWishlist(dogLiked) {
+    if (this.props.isAuthenticated) {
+      this.props.handleDogToWishListOnProfile(dogLiked)
+    } else {
+      this.props.history.push('/auth')
+    }
+  }
+
+  _showMessageAfterAction(actionMessage){
+    const { type, text} = actionMessage
+
+    const action = {
+      'success': () => message.success(text),
+      'error': () => message.success(text)
+    }
+
+    action[type]()
   }
 
   render() {
@@ -118,6 +141,7 @@ class ProfileWishlist extends PureComponent {
                 dog={dog}
                 style={{ marginBottom: "2em" }}
                 onClickDogCard={dog => this._handlePreview(dog.base64Image)}
+                onClickLikeButton={dog => this._handleDogOnWishlist(dog)}
               />
             ))}
           </Row>
@@ -145,11 +169,15 @@ const mapStateToProps = (state) => ({
   myDogsWishlist: state.profileWishlist.myDogsWishlist,
   isFetchingMyDogsWishlist: state.profileWishlist.isFetchingMyDogsWishlist,
   isSendingDog: state.profileWishlist.isSendingDog,
+  actionMessage: state.profileWishlist.actionMessage,
   loggedUser: state.authentication.loggedUser,
+  isAuthenticated: state.authentication.isAuthenticated,
 })
 
 const mapDispatchToProps = {
   loadMyDogsWishlist: ProfileWishlistActions.loadMyDogsWishlist,
+  handleDogToWishListOnProfile: ProfileWishlistActions.handleDogToWishListOnProfile,
+  showActionMessage: ProfileWishlistActions.showActionMessage,
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(ProfileWishlist)
