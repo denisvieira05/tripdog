@@ -3,7 +3,8 @@ import DogsService from '../../services/dogs/DogsService'
 import {
   UPDATE_MY_DOGS_WISHLIST,
   IS_FETCHING_MY_DOGS_WISHLIST,
-  IS_SENDING_DOG
+  IS_SENDING_DOG,
+  SHOW_ACTION_MESSAGE
 } from './ProfileWishlistTypes'
 
 export const updateMyDogsWishlist = (myDogsWishlist) => {
@@ -23,6 +24,11 @@ export const isSendingDog = (isSendingDog) => ({
   payload: isSendingDog,
 })
 
+export const showActionMessage = (actionMessage) => ({
+  type: SHOW_ACTION_MESSAGE,
+  payload: actionMessage,
+})
+
 export const loadMyDogsWishlist = () => {
   return async (dispatch) => {
     dispatch(isFetchingMyDogsWishlist(true))
@@ -36,7 +42,6 @@ export const loadMyDogsWishlist = () => {
 
 export const sendDog = (newDog) => {
   return (dispatch) => {
-
     dispatch(isSendingDog(true))
 
     new DogsService().sendDog(newDog).then(() => {
@@ -46,6 +51,18 @@ export const sendDog = (newDog) => {
     .catch((error) => {
       dispatch(isSendingDog(false))
     });
+
+  }
+}
+
+export const handleDogToWishListOnProfile = (dogLiked) => {
+  return async (dispatch) => {
+    dispatch(isFetchingMyDogsWishlist(true))
+
+    new DogsService().handleDogToUserOnWishlist(dogLiked).then(() => {
+      dispatch(loadMyDogsWishlist())
+      dispatch(showActionMessage({ type: 'success', text: dogLiked.name + ' - Wishlist Dog Status Updated' }))
+    })
 
   }
 }

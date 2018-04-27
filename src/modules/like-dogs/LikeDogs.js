@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react';
-import { Row, Spin, Icon, Layout, Modal } from 'antd';
+import { Row, Spin, Icon, Layout, Modal, message } from 'antd';
 import * as LikeDogsActions from './LikeDogsActions'
 import { connect } from 'react-redux'
 import GeneralHeader from '../../components/GeneralHeader'
@@ -14,7 +14,7 @@ class LikeDogs extends PureComponent {
     dogsList: this.props.dogs || []
   };
 
-  async componentWillMount() {
+  componentWillMount() {
     this.props.loadDogs()
   }
 
@@ -24,6 +24,21 @@ class LikeDogs extends PureComponent {
         dogsList: nextProps.dogs
       })
     }
+
+    if (nextProps.actionMessage !== null && nextProps.actionMessage !== this.props.actionMessage) {
+      this._showMessageAfterAction(nextProps.actionMessage)
+    }
+  }
+
+  _showMessageAfterAction(actionMessage) {
+    const { type, text } = actionMessage
+
+    const action = {
+      'success': () => message.success(text),
+      'error': () => message.success(text)
+    }
+
+    action[type]()
   }
 
   _handlePreview = img => {
@@ -50,8 +65,11 @@ class LikeDogs extends PureComponent {
   _handleCancelPreview = () => this.setState({ previewVisible: false });
 
   _handleDogOnWishlist (dogLiked) {
-    console.log('dogLiked',dogLiked)
-    this.props.handleDogToWishList(dogLiked)
+    if(this.props.isAuthenticated){
+      this.props.handleDogToWishList(dogLiked)
+    } else {
+      this.props.history.push('/auth')
+    }
   }
 
   render() {
@@ -99,10 +117,11 @@ class LikeDogs extends PureComponent {
   }
 }
 
-
 const mapStateToProps = (state) => ({
   dogs: state.likeDogs.dogs,
-  isFetchingDogs: state.likeDogs.isFetchingDogs
+  isFetchingDogs: state.likeDogs.isFetchingDogs,
+  actionMessage: state.profileWishlist.actionMessage,
+  isAuthenticated: state.authentication.isAuthenticated,
 })
 
 const mapDispatchToProps = {

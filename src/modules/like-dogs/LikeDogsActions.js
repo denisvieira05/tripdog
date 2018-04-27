@@ -5,6 +5,8 @@ import {
   IS_FETCHING_DOGS
 } from './LikeDogsTypes'
 
+import { showActionMessage } from '../profile-wishlist/ProfileWishlistActions'
+
 export const updateDogs = (dogs) => {
   return {
     type: UPDATE_DOGS,
@@ -30,10 +32,8 @@ export const loadDogs = () => {
 
 export const handleDogToWishList = (dogLiked) => {
   return async (dispatch) => {
-    dispatch(isFetchingDogs(true))
-
     new DogsService().handleDogToUserOnWishlist(dogLiked).then(() => {
-      dispatch(loadDogs())
+      dispatch(showActionMessage({ type: 'success', text: dogLiked.name + ' - Wishlist Dog Status Updated' }))
     })
 
   }

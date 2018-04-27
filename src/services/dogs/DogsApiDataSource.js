@@ -52,38 +52,63 @@ class DogsApiDataSource extends ApiDataSource {
     })
   }
 
-  handleDogToUserOnWishlist(newDog) {
-    return new Promise((resolve, reject) => {
-      let hasDogOnWishlist = false 
-      const {dogKey} = newDog
+  handleDogToUserOnWishlist(dog) {
+    return new Promise( async (resolve, reject) => {
+      let hasDogOnWishlist = false;
+      const { dogKey, user } = dog
 
-      firebase.database().ref('users/' + this.USER_ID).child('wishlist').orderByChild('dog_key').equalTo(dogKey).once("value", function (snapshot) {
-        console.log(snapshot.val());
-        snapshot.forEach(function (data) {
-          console.log('datakey',data.key);
-          console.log('data',data)
-        });
+      const newDogMapped = new DogsConverter().mapperEntityToRequest(dog, user, this.USER_ID, dogKey)
+
+      firebase.database().ref('users/' + this.USER_ID).child('wishlist').orderByChild('dog_key').equalTo(dogKey).once("value").then((snapshot) => {
+        if(snapshot.val()){
+          this._removeDogFromUserWishlist(newDogMapped).then(() => {
+            resolve()
+          }).catch((error) => {
+            reject(error)
+          })
+        } else {
+          this._addDogToUserWishlist(newDogMapped).then(() => {
+            resolve()
+          }).catch((error) => {
+            reject(error)
+          })
+        }
       });
-
-      // firebase.database().ref('dogs/').push().set(newDog).then(() => {
-      //   this._addDogToUserWishlist(newDog).then(() => resolve()).catch((error) => reject(error))
-      // }).catch((error) => {
-      //   reject(error)
-      // })
     })
   }
 
   _addDogToUserWishlist(newDog) {
     return new Promise((resolve, reject) => {
-      firebase.database().ref('users/' + this.USER_ID + '/wishlist').push().set(newDog).then(() => {
+      const { dog_key } = newDog
+
+      var addDogAction = {};
+      addDogAction['users/' + this.USER_ID + '/wishlist/' + dog_key] = newDog;
+
+      firebase.database().ref().update(addDogAction).then(() => {
+        console.log('adicionou na wish')
+        resolve()
+      }).catch((error) => {
+        reject(error)
+      })
+    })
+
+  }
+
+  _removeDogFromUserWishlist(dog) {
+    return new Promise((resolve, reject) => {
+      const { dog_key } = dog
+
+      var removeDogAction = {};
+      removeDogAction['users/' + this.USER_ID + '/wishlist/' + dog_key] = null;
+
+      firebase.database().ref().update(removeDogAction).then(() => {
+        console.log('removeu da wish')
         resolve()
       }).catch((error) => {
         reject(error)
       })
     })
   }
-
-  _removeDogFromUserWishlist(dog) {}
 
 }
 
