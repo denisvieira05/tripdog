@@ -56,7 +56,7 @@ class LikeDogs extends PureComponent {
   }
 
   _filterDogsList = textSearched => {
-    const dogsFiltered = this.props.dogs.filter((dog) => this._textIsPresentOnUsername(textSearched,dog.name))
+    const dogsFiltered = this.props.dogs.filter((dog) => this._textIsPresentOnUsername(textSearched.toLowerCase(), dog.name.toLowerCase()))
     this.setState({
       dogsList: dogsFiltered
     })
