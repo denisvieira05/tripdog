@@ -36,7 +36,6 @@ class AddDogModal extends PureComponent {
   }
 
   _updateDogImage(base64Image, file) {
-    // console.log(base64Image)
     this.setState({ currentImageToSend: base64Image });
   }
 
@@ -96,7 +95,7 @@ class AddDogModal extends PureComponent {
               loading={isSendingDog} 
               onClick={this.handleSubmit} 
               htmlType="submit"
-              style={{ backgroundColor: '#FFB427', borderColor: '#FFB427' }}
+              style={styles.sendButton}
             >
               {isSendingDog ? 'Enviando' : 'Enviar'}
             </Button>,
@@ -149,7 +148,7 @@ class AddDogModal extends PureComponent {
                     beforeUpload={(file) => this._onBeforeUpload(file)}
                     onRemove={(file) => this._onRemoveImage(file)}
                     action="//jsonplaceholder.typicode.com/posts/">
-                      {currentImageToSend ? <img src={currentImageToSend} style={{ width: '10em', height: '10em'}} /> : uploadButton}
+                      {currentImageToSend ? <img src={currentImageToSend} style={styles.imageToSendStyle} alt="Image To Send"/> : uploadButton}
                     </Upload>
                   )}
                 </FormItem>
@@ -170,6 +169,16 @@ const mapDispatchToProps = {
   sendDog: ProfileWishlistActions.sendDog,
 }
 
+const styles = {
+  imageToSendStyle: { 
+    width: '10em', 
+    height: '10em'
+  },
+  sendButton: {
+    backgroundColor: '#FFB427',
+    borderColor: '#FFB427' 
+  }
+}
 
 const AddDogModalWrapped = Form.create()(AddDogModal);
 
